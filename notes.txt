@@ -1,0 +1,8 @@
+ 1. Publish serial number
+{tx_type:’publish_serial_number’, lotto_type:’bc_lotto’, lotto_date:’2022-11-01 20:30:00’, serial_number:’3ad9c6ed04bc91692c580b369b7771f0d6c977e8fb72599630a8b773fb34a6476291ef1c177f59ff9d95a24faaf62326a2fbe1720f01631ed3c456994d897061’}
+
+ 2. List all lotto bought (by minute) (max 3500 records per transaction)
+{tx_type:’lotto_bought’, lotto_type:’bc_lotto’, lotto_date:’2022-11-01 20:30:00’,  time:’2022-10-20 09:58:00#1’, lotto: [“249571x1”, “645777x2”, “378915x1”, “567891x3”]}
+
+ 3. Publish private key and announce result
+{tx_type:’publish_private_key’, lotto_type:’bc_lotto’, lotto_date:’2022-11-01 20:30:00’, result: ’249615’, private_key:’RnsmrK_249615_qHdYzmeygnxOfPhP8sdbWJmMwn70iKgpM7pOUuxin27D9bddkQ’}
