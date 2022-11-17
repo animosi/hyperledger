@@ -11,7 +11,7 @@
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-name: 'ngo'
+name: 'testnet'
 x-type: 'hlfv1'
 description: 'NGO Network'
 version: '1.0'
@@ -21,7 +21,7 @@ channels:
     orderers:
       - orderer.com
     peers:
-      peer1:
+      nd-I3OM7G6JIBCSRAAGFQGKJUIGSM:
         endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
@@ -31,24 +31,21 @@ organizations:
   Org1:
     mspid: m-HLJ5GNXSINB73OM2FTDKHGSZOU
     peers:
-      - peer1
+      - nd-I3OM7G6JIBCSRAAGFQGKJUIGSM
     certificateAuthorities:
       - ca-org1
 
 orderers:
   orderer.com:
     url: grpcs://orderer.n-x32jr6f5gfc4hofle3jgx6o2hi.managedblockchain.ap-southeast-1.amazonaws.com:30001
-    grpcOptions:
-      ssl-target-name-override:
     tlsCACerts:
       path: /home/ec2-user/managedblockchain-tls-chain.pem
 
 peers:
-  peer1:
-    url: grpcs://orderer.n-x32jr6f5gfc4hofle3jgx6o2hi.managedblockchain.ap-southeast-1.amazonaws.com:30001
-    eventUrl: grpcs://
+  nd-I3OM7G6JIBCSRAAGFQGKJUIGSM:
+    url: grpcs://nd-i3om7g6jibcsraagfqgkjuigsm.m-hlj5gnxsinb73om2ftdkhgszou.n-x32jr6f5gfc4hofle3jgx6o2hi.managedblockchain.ap-southeast-1.amazonaws.com:30003
     grpcOptions:
-      ssl-target-name-override:
+      ssl-target-name-override: nd-I3OM7G6JIBCSRAAGFQGKJUIGSM
     tlsCACerts:
       path: /home/ec2-user/managedblockchain-tls-chain.pem
 
