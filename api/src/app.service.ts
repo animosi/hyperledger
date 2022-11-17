@@ -56,20 +56,23 @@ export class AppService {
     client.loadFromConfig(clientConfigPath);
 
     await client.initCredentialStores();
+    const peer = await client.getPeer('Org1');
 
-    if (username) {
-      const user = await client.getUserContext(username, true);
-      if (!user) {
-        throw new Error('USER_NOT_FOUND');
-      } else {
-        console.log(
-          '##### getClient - User %s was found to be registered and enrolled',
-          username,
-        );
-      }
-    }
+    console.log(peer);
 
-    console.log('============ END getClientForOrg for org %s and user %s \n\n');
+    // if (username) {
+    //   const user = await client.getUserContext(username, true);
+    //   if (!user) {
+    //     throw new Error('USER_NOT_FOUND');
+    //   } else {
+    //     console.log(
+    //       '##### getClient - User %s was found to be registered and enrolled',
+    //       username,
+    //     );
+    //   }
+    // }
+
+    // console.log('============ END getClientForOrg for org %s and user %s \n\n');
 
     return client;
   }
