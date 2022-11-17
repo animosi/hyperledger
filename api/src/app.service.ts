@@ -37,17 +37,17 @@ export class AppService {
   }
 
   async getClientForOrg(userorg, username) {
-    console.log(
-      '============ START getClientForOrg for org %s and user %s',
-      userorg,
-      username,
-    );
+    // console.log(
+    //   '============ START getClientForOrg for org %s and user %s',
+    //   userorg,
+    //   username,
+    // );
 
-    console.log(
-      '##### getClient - Loading connection profiles from file: %s and %s',
-      connProfilePath,
-      clientConfigPath,
-    );
+    // console.log(
+    //   '##### getClient - Loading connection profiles from file: %s and %s',
+    //   connProfilePath,
+    //   clientConfigPath,
+    // );
 
     const client = hfc.loadFromConfig(connProfilePath);
 
@@ -56,7 +56,7 @@ export class AppService {
     await client.initCredentialStores();
     const channel = await client.getChannel('mychannel');
 
-    console.log(channel);
+    console.log('Channel OUTPUT', channel);
 
     // if (username) {
     //   const user = await client.getUserContext(username, true);
