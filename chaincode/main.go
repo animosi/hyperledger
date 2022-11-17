@@ -15,18 +15,18 @@ type SimpleChaincode struct {
 const lottoIndex = "lottoType~lottoDate"
 
 type Asset struct {
-	Id           string `json:"id"`
-	TxType       string `json:"tx_type"`
-	LottoType    string `json:"lotto_type"`
-	LottoDate    string `json:"lotto_date"`
-	PrivateKey   string `json:"private_key,omitempty"`
-	Result       string `json:"result,omitempty"`
-	SerialNumber string `json:"serial_number,omitempty"`
-	Time         string `json:"time,omitempty"`
-	Lotto        string `json:"lotto"`
+	Id           string   `json:"id"`
+	TxType       string   `json:"tx_type"`
+	LottoType    string   `json:"lotto_type"`
+	LottoDate    string   `json:"lotto_date"`
+	PrivateKey   string   `json:"private_key,omitempty"`
+	Result       string   `json:"result,omitempty"`
+	SerialNumber string   `json:"serial_number,omitempty"`
+	Time         string   `json:"time,omitempty"`
+	Lotto        []string `json:"lotto,omitempty"`
 }
 
-// CreateLottoNumber initializes a new asset in the ledger
+// CreateAsset initializes a new asset in the ledger
 func (t *SimpleChaincode) CreateAsset(ctx contractapi.TransactionContextInterface, assetID string, input *Asset) error {
 	exists, err := t.AssetExists(ctx, assetID)
 	if err != nil {
@@ -99,7 +99,7 @@ func (t *SimpleChaincode) AssetExists(ctx contractapi.TransactionContextInterfac
 // InitLedger creates the initial set of assets in the ledger.
 func (t *SimpleChaincode) InitLedger(ctx contractapi.TransactionContextInterface) error {
 	assets := []Asset{
-		{TxType: "txType1", Id: "asset1", LottoType: "lottoType", LottoDate: "lottoDate", PrivateKey: "privateKey", Result: "result", SerialNumber: "serialNumber", Time: "time", Lotto: "lotto"},
+		{TxType: "txType1", Id: "asset1", LottoType: "lottoType", LottoDate: "lottoDate", PrivateKey: "privateKey", Result: "result", SerialNumber: "serialNumber", Time: "time", Lotto: []Asset.Lotto{"test"}},
 	}
 
 	for _, asset := range assets {

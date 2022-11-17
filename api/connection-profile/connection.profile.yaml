@@ -1,20 +1,20 @@
 # Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License").
 # You may not use this file except in compliance with the License.
 # A copy of the License is located at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
-# or in the "license" file accompanying this file. This file is distributed 
-# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
-# express or implied. See the License for the specific language governing 
+#
+# or in the "license" file accompanying this file. This file is distributed
+# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+# express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-name: "ngo"
-x-type: "hlfv1"
-description: "NGO Network"
-version: "1.0"
+name: 'ngo'
+x-type: 'hlfv1'
+description: 'NGO Network'
+version: '1.0'
 
 channels:
   mychannel:
@@ -29,7 +29,7 @@ channels:
 
 organizations:
   Org1:
-    mspid: 
+    mspid: m-HLJ5GNXSINB73OM2FTDKHGSZOU
     peers:
       - peer1
     certificateAuthorities:
@@ -37,18 +37,18 @@ organizations:
 
 orderers:
   orderer.com:
-    url: grpcs://
+    url: grpcs://orderer.n-x32jr6f5gfc4hofle3jgx6o2hi.managedblockchain.ap-southeast-1.amazonaws.com:30001
     grpcOptions:
-      ssl-target-name-override: 
+      ssl-target-name-override:
     tlsCACerts:
       path: /home/ec2-user/managedblockchain-tls-chain.pem
 
 peers:
   peer1:
-    url: grpcs://
+    url: grpcs://orderer.n-x32jr6f5gfc4hofle3jgx6o2hi.managedblockchain.ap-southeast-1.amazonaws.com:30001
     eventUrl: grpcs://
     grpcOptions:
-      ssl-target-name-override: 
+      ssl-target-name-override:
     tlsCACerts:
       path: /home/ec2-user/managedblockchain-tls-chain.pem
 
@@ -60,6 +60,6 @@ certificateAuthorities:
     tlsCACerts:
       path: /home/ec2-user/managedblockchain-tls-chain.pem
     registrar:
-      - enrollId: 
-        enrollSecret: 
-    caName: [ec2-user@ip-192-168-0-50 connection-profile]$ 
+      - enrollId: admin
+        enrollSecret: Midassoft22
+    caName: m-HLJ5GNXSINB73OM2FTDKHGSZOU
