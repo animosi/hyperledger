@@ -6,11 +6,11 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
+  getHello(): Promise<string> {
     return this.appService.getHello();
   }
   @Get('test')
-  test(): Promise<void> {
-    return this.appService.invokeChaincode('admin', 'Org1');
+  test() {
+    return this.appService.getClientForOrg('Org1', 'admin');
   }
 }

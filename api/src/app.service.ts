@@ -1,5 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import hfc from 'fabric-client';
+import * as hfc from 'fabric-client';
+import readYamlFile from 'read-yaml-file';
+import * as path from 'path';
+const connProfilePath = path.join(
+  __dirname,
+  '../connection-profile/connection.profile.yaml',
+);
+const clientConfigPath = path.join(
+  __dirname,
+  '../connection-profile/client-org1.yaml',
+);
+
 // hfc.addConfigFile('./../config.json');
 // const channelName = hfc.getConfigSetting('channelName');
 // const chaincodeName = hfc.getConfigSetting('chaincodeName');
@@ -7,9 +18,24 @@ import hfc from 'fabric-client';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  async getHello(): Promise<string> {
+    console.log('app start...');
+    try {
+      const file = await readYamlFile(connProfilePath);
+      console.log(file);
+      return 'hello';
+    } catch (error) {
+      console.log(error);
+    }
+
+    // const gateway = new Gateway();
+    // await gateway.connect(connectionProfile, gatewayOptions);
+
+    // const network = await gateway.getNetwork('mychannel');
+    // console.log(network);
+    return 'Hello';
   }
+
   async getClientForOrg(userorg, username) {
     console.log(
       '============ START getClientForOrg for org %s and user %s',
@@ -17,18 +43,17 @@ export class AppService {
       username,
     );
     const config = './connection-profile/connection.profile.yaml';
-    const orgLower = userorg.toLowerCase();
-    const clientConfig =
-      './connection-profile/' + 'client-' + orgLower + '.yaml';
 
     console.log(
       '##### getClient - Loading connection profiles from file: %s and %s',
       config,
-      clientConfig,
+      clientConfigPath,
     );
 
-    const client = hfc.loadFromConfig(config);
-    client.loadFromConfig(clientConfig);
+    const client = hfc.loadFromConfig(connProfilePath);
+    console.log(client);
+
+    client.loadFromConfig(clientConfigPath);
 
     await client.initCredentialStores();
 
