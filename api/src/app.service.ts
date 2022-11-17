@@ -16,10 +16,10 @@ export class AppService {
       userorg,
       username,
     );
-    const config = '../connection-profile/connection.profile.yaml';
+    const config = './connection-profile/connection.profile.yaml';
     const orgLower = userorg.toLowerCase();
     const clientConfig =
-      '../connection-profile/' + 'client-' + orgLower + '.yaml';
+      './connection-profile/' + 'client-' + orgLower + '.yaml';
 
     console.log(
       '##### getClient - Loading connection profiles from file: %s and %s',
