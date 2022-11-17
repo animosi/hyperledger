@@ -99,7 +99,7 @@ func (t *SimpleChaincode) AssetExists(ctx contractapi.TransactionContextInterfac
 // InitLedger creates the initial set of assets in the ledger.
 func (t *SimpleChaincode) InitLedger(ctx contractapi.TransactionContextInterface) error {
 	assets := []Asset{
-		{TxType: "txType1", Id: "asset1", LottoType: "lottoType", LottoDate: "lottoDate", PrivateKey: "privateKey", Result: "result", SerialNumber: "serialNumber", Time: "time", Lotto: []Asset.Lotto{"test"}},
+		{TxType: "txType1", Id: "asset1", LottoType: "lottoType", LottoDate: "lottoDate", PrivateKey: "privateKey", Result: "result", SerialNumber: "serialNumber", Time: "time", Lotto: []string{"test"}},
 	}
 
 	for _, asset := range assets {

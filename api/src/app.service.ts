@@ -49,7 +49,7 @@ export class AppService {
     return client;
   }
 
-  async invokeChaincode(username, orgName) {
+  async invokeChaincode(username: string, orgName: string) {
     console.log(
       "\n============ invokeChaincode - chaincode %s, function %s, on the channel '%s' for org: %s\n",
 

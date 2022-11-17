@@ -9,4 +9,8 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+  @Get('test')
+  test(): Promise<void> {
+    return this.appService.invokeChaincode('admin', 'Org1');
+  }
 }
