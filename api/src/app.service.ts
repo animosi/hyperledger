@@ -42,16 +42,14 @@ export class AppService {
       userorg,
       username,
     );
-    const config = './connection-profile/connection.profile.yaml';
 
     console.log(
       '##### getClient - Loading connection profiles from file: %s and %s',
-      config,
+      connProfilePath,
       clientConfigPath,
     );
 
     const client = hfc.loadFromConfig(connProfilePath);
-    console.log(client);
 
     client.loadFromConfig(clientConfigPath);
 
