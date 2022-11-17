@@ -54,9 +54,9 @@ export class AppService {
     client.loadFromConfig(clientConfigPath);
 
     await client.initCredentialStores();
-    const peer = await client.getPeer('nd-I3OM7G6JIBCSRAAGFQGKJUIGSM');
+    const channel = await client.getChannel('mychannel');
 
-    console.log(peer);
+    console.log(channel);
 
     // if (username) {
     //   const user = await client.getUserContext(username, true);
