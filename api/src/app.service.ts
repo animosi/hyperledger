@@ -56,7 +56,7 @@ export class AppService {
     client.loadFromConfig(clientConfigPath);
 
     await client.initCredentialStores();
-    const peer = await client.getPeer('peer1');
+    const peer = await client.getPeer('nd-I3OM7G6JIBCSRAAGFQGKJUIGSM');
 
     console.log(peer);
 
