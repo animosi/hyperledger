@@ -38,7 +38,7 @@ export class AppService {
       );
       const wallet = await Wallets.newFileSystemWallet(this.walletPath);
 
-      const identityLabel = 'User1@org1.example.com';
+      const identityLabel = 'org1';
 
       const identity: X509Identity = {
         credentials: {
@@ -171,7 +171,7 @@ export class AppService {
           };
 
           const sendPromise = await channel.sendTransaction(orderer_request);
-          events.push(sendPromise);
+          // events.push(sendPromise);
         }, //end promise()
       ),
     );
