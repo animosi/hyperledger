@@ -1,54 +1,70 @@
 import { Injectable } from '@nestjs/common';
-import * as hfc from 'fabric-client';
 import * as path from 'path';
 import * as fs from 'fs';
+import { Gateway, GatewayOptions, Wallets, X509Identity } from 'fabric-network';
+import * as hfc from 'fabric-client';
 import * as yaml from 'js-yaml';
 // import { clearTimeout } from 'timers';
-const connProfilePath = path.join(
-  __dirname,
-  '../connection-profile/connection.profile.yaml',
-);
-const clientConfigPath = path.join(
-  __dirname,
-  '../connection-profile/client-org1.yaml',
-);
 
-import { Gateway, GatewayOptions, Wallets } from 'fabric-network';
-
-const channelName = 'mychannel';
-const chaincodeName = 'todo';
-const org1 = 'org1';
-const walletPath = path.join(__dirname, 'wallet');
-
-// type InvokeChainCodeReq = {
-//   peers: string[];
-//   organization: string;
-//   channelName: string;
-//   chaincodeId: string;
-//   chaincodeArgs: string[];
-//   chaincodeMethod: any;
-//   username: string;
-// };
+type InvokeChainCodeReq = {
+  peers: string[];
+  organization: string;
+  channelName: string;
+  chaincodeId: string;
+  chaincodeArgs: string[];
+  chaincodeMethod: any;
+  username: string;
+};
 
 @Injectable()
 export class AppService {
+  channelName = 'mychannel';
+  org1 = 'org1';
+  walletPath = path.join(__dirname, 'wallet');
+  connProfilePath = path.join(
+    __dirname,
+    '../connection-profile/connection.profile.yaml',
+  );
+  clientConfigPath = path.join(
+    __dirname,
+    '../connection-profile/client-org1.yaml',
+  );
+
   async getHello(): Promise<string> {
     console.log('app start...');
     try {
       const connectionProfile: any = yaml.load(
-        fs.readFileSync(connProfilePath, 'utf-8'),
+        fs.readFileSync(this.connProfilePath, 'utf-8'),
       );
-      const wallet = await Wallets.newFileSystemWallet(walletPath);
+      const wallet = await Wallets.newFileSystemWallet(this.walletPath);
+
+      const identityLabel = 'User1@org1.example.com';
+
+      const identity: X509Identity = {
+        credentials: {
+          certificate: fs
+            .readFileSync('/home/ec2-user/msp/admincerts/cert.pem')
+            .toString(),
+          privateKey: fs
+            .readFileSync(
+              '/home/ec2-user/msp/keystore/8d2d0848d0bb4c21056af0172f5423565a6cb9d2edcd3c0a6e4f0e516f50a4d7_sk',
+            )
+            .toString(),
+        },
+        mspId: 'Org1MSP',
+        type: 'X.509',
+      };
+      await wallet.put(identityLabel, identity);
 
       const gatewayOpts: GatewayOptions = {
         wallet,
-        identity: org1,
+        identity: this.org1,
         discovery: { enabled: true, asLocalhost: true },
       };
       const gateway = new Gateway();
       await gateway.connect(connectionProfile, gatewayOpts);
 
-      const network = await gateway.getNetwork('mychannel');
+      const network = await gateway.getNetwork(this.channelName);
 
       console.log(network);
 
@@ -60,119 +76,104 @@ export class AppService {
 
   //todo OnInit()
   async getClient(): Promise<hfc> {
-    const client = hfc.loadFromConfig(connProfilePath);
+    const client = hfc.loadFromConfig(this.connProfilePath);
     if (!client) {
       throw new Error('GET_CLIENT_ERROR');
     }
-    client.loadFromConfig(clientConfigPath);
+    client.loadFromConfig(this.clientConfigPath);
     await client.initCredentialStores();
 
     return client;
   }
 
-  // async invokeChaincode(body: InvokeChainCodeReq) {
-  //   const client = await this.getClient();
-  //   const channel = client.getChannel(body.channelName);
+  async invokeChaincode(body: InvokeChainCodeReq) {
+    const client = await this.getClient();
+    const channel = client.getChannel(body.channelName);
 
-  //   if (!channel) {
-  //     throw new Error('CHANNEL_NOT_FOUND');
-  //   }
+    if (!channel) {
+      throw new Error('CHANNEL_NOT_FOUND');
+    }
 
-  //   const txId = client.newTransactionID();
-  //   const txIdAsString = txId.getTransactionID();
+    const txId = client.newTransactionID();
+    const txIdAsString = txId.getTransactionID();
 
-  //   const request = {
-  //     targets: body.peers,
-  //     chaincodeId: body.chaincodeId,
-  //     fcn: JSON.stringify(body.chaincodeMethod),
-  //     args: body.chaincodeArgs,
-  //     chainId: body.chaincodeId,
-  //     txId,
-  //   };
+    const request = {
+      targets: body.peers,
+      chaincodeId: body.chaincodeId,
+      fcn: JSON.stringify(body.chaincodeMethod),
+      args: body.chaincodeArgs,
+      chainId: body.chaincodeId,
+      txId,
+    };
 
-  //   const results = await channel.sendTransactionProposal(request);
-  //   const proposalResponses: any = results[0];
-  //   const proposal = results[1];
-  //   let successfulResponses = true;
+    const results = await channel.sendTransactionProposal(request);
+    const proposalResponses: any = results[0];
+    const proposal = results[1];
+    let successfulResponses = true;
 
-  //   for (const i in proposalResponses) {
-  //     let oneSuccessfulResponse = false;
-  //     if (
-  //       proposalResponses &&
-  //       proposalResponses[i].response &&
-  //       proposalResponses[i].response.status === 200
-  //     ) {
-  //       oneSuccessfulResponse = true;
-  //       console.log(
-  //         '##### invokeChaincode - received successful proposal response',
-  //       );
-  //     } else {
-  //       console.log(
-  //         '##### invokeChaincode - received unsuccessful proposal response',
-  //       );
-  //     }
-  //     successfulResponses = successfulResponses && oneSuccessfulResponse;
-  //   }
+    for (const i in proposalResponses) {
+      let oneSuccessfulResponse = false;
 
-  //   const event_hubs = channel.getChannelEventHubsForOrg();
+      //?
+      if (
+        proposalResponses &&
+        proposalResponses[i].response &&
+        proposalResponses[i].response.status === 200
+      ) {
+        oneSuccessfulResponse = true;
+        console.log(
+          '##### invokeChaincode - received successful proposal response',
+        );
+      } else {
+        console.log(
+          '##### invokeChaincode - received unsuccessful proposal response',
+        );
+      }
+      successfulResponses = successfulResponses && oneSuccessfulResponse;
+    }
 
-  //   const events = await Promise.all(
-  //     event_hubs.map(
-  //       asu(eh) => {
-  //         const event_timeout = setTimeout(() => {
-  //           const message = 'REQUEST_TIMEOUT:' + eh.getPeerAddr();
-  //           console.error(message);
-  //           eh.disconnect();
-  //         }, 10000);
+    const event_hubs = channel.getChannelEventHubsForOrg();
 
-  //         const peerAddr = eh.getPeerAddr();
+    const events = await Promise.all(
+      event_hubs.map(
+        async (eh) => {
+          const event_timeout = setTimeout(() => {
+            const message = 'REQUEST_TIMEOUT:' + eh.getPeerAddr();
+            console.error(message);
+            eh.disconnect();
+          }, 10000);
 
-  //         eh.registerTxEvent(
-  //           txIdAsString,
-  //           (txId, code, blockNumber) => {
-  //             console.log(
-  //               `##### invokeChaincode - The invoke chaincode transaction has been committed on peer ${peerAddr}`,
-  //             );
-  //             console.log(
-  //               `##### invokeChaincode - Transaction ${txId} has status of ${code} in block ${blockNumber}`,
-  //               txId,
-  //               code,
-  //               blockNumber,
-  //             );
+          const peerAddr = eh.getPeerAddr();
 
-  //             clearTimeout(event_timeout); //?
+          eh.registerTxEvent(
+            txIdAsString,
+            (txId, code, blockNumber) => {
+              clearTimeout(event_timeout); //?
 
-  //             if (code !== 'VALID') {
-  //               const message = `##### invokeChaincode - The invoke chaincode transaction was invalid, ${code}`;
+              if (code !== 'VALID') {
+                throw new Error('INVALID_TRANSACTION');
+              }
+            },
+            (err) => {
+              clearTimeout(event_timeout);
+              console.log(err);
+              throw new Error(err.message);
+            },
+            { unregister: true, disconnect: true },
+          );
+          eh.connect();
+          //end map
 
-  //               throw new Error(message);
-  //             } else {
-  //               const message =
-  //                 '##### invokeChaincode - The invoke chaincode transaction was valid.';
-  //               console.log(message);
-  //               return message;
-  //             }
-  //           },
-  //           (err) => {
-  //             clearTimeout(event_timeout);
-  //             console.log(err);
-  //             throw new Error(err.message);
-  //           },
-  //           { unregister: true, disconnect: true },
-  //         );
-  //         eh.connect();
-  //         //end map
+          const orderer_request = {
+            txId: txId,
+            proposalResponses: proposalResponses,
+            proposal: proposal,
+          };
 
-  //         const orderer_request = {
-  //           txId: txId,
-  //           proposalResponses: proposalResponses,
-  //           proposal: proposal,
-  //         };
-
-  //         const sendPromise = await channel.sendTransaction(orderer_request);
-  //         events.push(sendPromise);
-  //       }, //end promise()
-  //     ),
-  //   );
-  // }
+          const sendPromise = await channel.sendTransaction(orderer_request);
+          events.push(sendPromise);
+        }, //end promise()
+      ),
+    );
+  }
 }
