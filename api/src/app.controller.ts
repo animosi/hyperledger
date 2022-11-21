@@ -11,9 +11,6 @@ export class AppController {
   }
   @Get('test')
   test() {
-    return this.appService.getClientForOrg(
-      'org1',
-      'm-HLJ5GNXSINB73OM2FTDKHGSZOU',
-    );
+    return this.appService.getClient();
   }
 }

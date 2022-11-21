@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@types/js-yaml": "^4.0.5",
+    "fabric-network": "^2.2.15",
+    "js-yaml": "^4.1.0"
+  }
+}
