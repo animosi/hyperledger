@@ -10,7 +10,6 @@ export class AppService {
   channelName = 'mychannel';
   org1 = 'org1';
   username = 'user1';
-  walletPath = path.join(__dirname, 'wallet');
   connProfilePath = path.join(
     __dirname,
     '../connection-profile/connection.profile.yaml',
@@ -19,7 +18,9 @@ export class AppService {
     __dirname,
     '../connection-profile/client-org1.yaml',
   );
+  // walletPath = path.join(__dirname, 'wallet');
 
+  //todo onInit()
   async getClient(): Promise<hfc> {
     const client = hfc.loadFromConfig(this.connProfilePath);
 
@@ -42,13 +43,14 @@ export class AppService {
         throw new Error('USER_ALREADY_EXISTS');
       }
 
+      //todo params
       const adminUserObj = await client.setUserContext({
         username: 'midas',
         password: 'Midassoft22',
       });
 
+      //* register new user
       const caClient = client.getCertificateAuthority();
-
       const secret = await caClient.register(
         {
           enrollmentID: this.username,
@@ -57,8 +59,7 @@ export class AppService {
         adminUserObj,
       );
 
-      console.log('SECRET', secret);
-
+      //* set new user's password
       user = await client.setUserContext({
         username: this.username,
         password: secret,
@@ -67,29 +68,28 @@ export class AppService {
       if (!user.isEnrolled()) {
         throw new Error('USER_ENROLL_ERROR');
       }
+
+      //todo revise
       return {
         success: true,
         secret,
-        message: this.username + ' enrolled Successfully',
+        message: this.username + ' ENROLLED',
       };
     } catch (error) {
       console.error(error.message);
       throw new Error(error);
     }
-
-    return true;
   }
 
   async queryChaincode() {
     try {
       const client = await this.getClient();
-
       const channel = client.getChannel(this.channelName);
+
       if (!channel) {
         throw new Error('CHANNEL_NOT_FOUND');
       }
 
-      // send query
       const request = {
         targets: ['nd-I3OM7G6JIBCSRAAGFQGKJUIGSM'],
         chaincodeId: 'mycc',
@@ -97,49 +97,14 @@ export class AppService {
         args: ['query', 'a'],
       };
 
-      const responses = await channel.queryByChaincode(request);
-      const ret = [];
-      if (responses) {
-        // you may receive multiple responses if you passed in multiple peers. For example,
-        // if the targets : peers in the request above contained 2 peers, you should get 2 responses
-        for (let i = 0; i < responses.length; i++) {
-          console.log(
-            '##### queryChaincode - result of query: ' +
-              responses[i].toString('utf8') +
-              '\n',
-          );
-        }
-        // check for error
-        const response = responses[0].toString('utf8');
-        console.log('RESPONSE', response);
+      const res = await channel.queryByChaincode(request);
 
-        if (
-          responses[0]
-            .toString('utf8')
-            .indexOf('Error: transaction returned with failure') != -1
-        ) {
-          throw new Error('RESPONSE_ERROR');
-        }
-        // we will only use the first response. We strip out the Fabric key and just return the payload
-        const json = JSON.parse(responses[0].toString('utf8'));
-        if (Array.isArray(json)) {
-          for (const key in json) {
-            if (json[key]['Record']) {
-              ret.push(json[key]['Record']);
-            } else {
-              ret.push(json[key]);
-            }
-          }
-        } else {
-          ret.push(json);
-        }
-        console.log('RETURN', ret);
-        return ret;
-      } else {
-        return 'RESPONSE_NULL';
+      if (!res || res.length < 1) {
+        return 'DATA_NOT_FOUND';
       }
+      return res;
     } catch (error) {
-      console.log('ERROR', error.message);
+      console.log('ERROR: ', error.message);
       return error.toString();
     }
   }
