@@ -11,6 +11,6 @@ export class AppController {
   }
   @Get('test')
   test() {
-    return this.appService.getClient();
+    return this.appService.queryChaincode();
   }
 }

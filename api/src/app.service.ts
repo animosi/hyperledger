@@ -176,12 +176,12 @@ export class AppService {
       ),
     );
   }
-  async queryChaincode(peers, channelName, chaincodeName, args, fcn) {
+  async queryChaincode() {
     try {
       // setup the client for this org
       const client = await this.getClient();
 
-      const channel = client.getChannel(channelName);
+      const channel = client.getChannel(this.channelName);
       if (!channel) {
         throw new Error('CHANNEL_NOT_FOUND');
       }
