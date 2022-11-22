@@ -84,6 +84,7 @@ export class AppService {
   async queryChaincode() {
     try {
       const client = await this.getClient();
+      await client.getUserContext(this.username, true);
       const channel = client.getChannel(this.channelName);
 
       if (!channel) {
