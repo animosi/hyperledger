@@ -22,7 +22,7 @@ export class AppService {
   privateKey = fs
     .readFileSync(
       path.resolve(
-        '/home/ec2-user/msp/keystore/0e9ba706091722dd10bd5a8b70f6e1542e48c1ca4c8642985233a30eb78346a5_sk',
+        '/home/ec2-user/msp/keystore/8d2d0848d0bb4c21056af0172f5423565a6cb9d2edcd3c0a6e4f0e516f50a4d7_sk',
       ),
     )
     .toString();
@@ -95,6 +95,7 @@ export class AppService {
 
   async queryChaincode() {
     try {
+      console.log(this.privateKey, this.signCert, this.mspId);
       const client = await this.getClient();
       await client.setAdminSigningIdentity(
         this.privateKey,
