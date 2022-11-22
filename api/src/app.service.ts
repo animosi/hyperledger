@@ -19,7 +19,6 @@ export class AppService {
     __dirname,
     '../connection-profile/client-org1.yaml',
   );
-
   privateKey = fs
     .readFileSync(
       path.resolve(
@@ -28,7 +27,7 @@ export class AppService {
     )
     .toString();
   signCert = fs
-    .readFileSync(path.resolve('/home/ec2-user/msp/signcerts/cert.pem'))
+    .readFileSync(path.resolve('/home/ec2-user/msp/admincerts/cert.pem'))
     .toString();
 
   // walletPath = path.join(__dirname, 'wallet');
