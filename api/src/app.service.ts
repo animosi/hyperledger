@@ -20,7 +20,8 @@ export class AppService {
     '../connection-profile/client-org1.yaml',
   );
 
-  pkPath = '/home/ec2-user/managedblockchain-tls-chain.pem';
+  pkPath =
+    '/home/ec2-user/msp/keystore/0e9ba706091722dd10bd5a8b70f6e1542e48c1ca4c8642985233a30eb78346a5_sk';
   signCertPath = '/home/ec2-user/msp/signcerts.cert.pem';
 
   // walletPath = path.join(__dirname, 'wallet');
