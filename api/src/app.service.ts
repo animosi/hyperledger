@@ -84,8 +84,8 @@ export class AppService {
   async queryChaincode() {
     try {
       const client = await this.getClient();
-      await client.getUserContext(this.username, true);
       const channel = client.getChannel(this.channelName);
+      await channel.initialize({ discover: true });
 
       if (!channel) {
         throw new Error('CHANNEL_NOT_FOUND');
