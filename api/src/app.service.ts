@@ -208,13 +208,14 @@ export class AppService {
         }
         // check for error
         const response = responses[0].toString('utf8');
+        console.log('RESPONSE', response);
 
         if (
           responses[0]
             .toString('utf8')
             .indexOf('Error: transaction returned with failure') != -1
         ) {
-          throw new Error('ERROR');
+          throw new Error('RESPONSE_ERROR');
         }
         // we will only use the first response. We strip out the Fabric key and just return the payload
         const json = JSON.parse(responses[0].toString('utf8'));
