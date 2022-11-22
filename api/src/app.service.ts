@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as path from 'path';
-import * as fs from 'fs';
-import { Gateway, GatewayOptions, Wallets, X509Identity } from 'fabric-network';
+// import * as fs from 'fs';
+// import { Gateway, GatewayOptions, Wallets, X509Identity } from 'fabric-network';
 import * as hfc from 'fabric-client';
-import * as yaml from 'js-yaml';
+// import * as yaml from 'js-yaml';
 
 @Injectable()
 export class AppService {
@@ -85,6 +85,7 @@ export class AppService {
     try {
       const client = await this.getClient();
       const channel = client.getChannel(this.channelName);
+      await client.getUserContext(this.username, true);
       await channel.initialize({ discover: true });
 
       if (!channel) {
