@@ -9,6 +9,7 @@ import * as hfc from 'fabric-client';
 export class AppService {
   channelName = 'mychannel';
   org1 = 'org1';
+  mspId = 'm-HLJ5GNXSINB73OM2FTDKHGSZOU';
   username = 'user1';
   connProfilePath = path.join(
     __dirname,
@@ -18,6 +19,10 @@ export class AppService {
     __dirname,
     '../connection-profile/client-org1.yaml',
   );
+
+  pkPath = '/home/ec2-user/managedblockchain-tls-chain.pem';
+  signCertPath = '/home/ec2-user/msp/signcerts.cert.pem';
+
   // walletPath = path.join(__dirname, 'wallet');
 
   //todo onInit()
@@ -84,8 +89,12 @@ export class AppService {
   async queryChaincode() {
     try {
       const client = await this.getClient();
+      await client.setAdminSigningIdentity(
+        this.pkPath,
+        this.signCertPath,
+        this.mspId,
+      );
       const channel = client.getChannel(this.channelName);
-      await client.getUserContext(this.username, true);
       await channel.initialize({ discover: true });
 
       if (!channel) {
