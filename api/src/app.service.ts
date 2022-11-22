@@ -42,9 +42,22 @@ export class AppService {
         throw new Error('USER_ALREADY_EXISTS');
       }
 
-      const admins = hfc.getConfigSetting('admins');
+      const adminUserObj = await client.setUserContext({
+        username: 'admin',
+        password: 'Midassoft22',
+      });
 
-      console.log(admins);
+      const caClient = client.getCertificateAuthority();
+
+      const secret = await caClient.register(
+        {
+          enrollmentID: this.username,
+          affiliation: '',
+        },
+        adminUserObj,
+      );
+
+      console.log('SECRET', secret);
     } catch (error) {
       console.error(error.message);
       throw new Error(error);
