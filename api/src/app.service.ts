@@ -28,7 +28,7 @@ export class AppService {
     )
     .toString();
   signCert = fs
-    .readFileSync(path.resolve('/home/ec2-user/msp/signcerts.cert.pem'))
+    .readFileSync(path.resolve('/home/ec2-user/msp/signcerts/cert.pem'))
     .toString();
 
   // walletPath = path.join(__dirname, 'wallet');
@@ -103,7 +103,6 @@ export class AppService {
         this.mspId,
       );
       const channel = client.getChannel(this.channelName);
-      await channel.initialize({ discover: true });
 
       if (!channel) {
         throw new Error('CHANNEL_NOT_FOUND');
