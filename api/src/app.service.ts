@@ -36,14 +36,14 @@ export class AppService {
   async registerUser() {
     try {
       const client = await this.getClient();
-      const user = await client.getUserContext(this.username, true);
+      let user = await client.getUserContext(this.username, true);
 
       if (user && user.isEnrolled()) {
         throw new Error('USER_ALREADY_EXISTS');
       }
 
       const adminUserObj = await client.setUserContext({
-        username: 'admin',
+        username: 'midas',
         password: 'Midassoft22',
       });
 
@@ -58,6 +58,20 @@ export class AppService {
       );
 
       console.log('SECRET', secret);
+
+      user = await client.setUserContext({
+        username: this.username,
+        password: secret,
+      });
+
+      if (!user.isEnrolled()) {
+        throw new Error('USER_ENROLL_ERROR');
+      }
+      return {
+        success: true,
+        secret,
+        message: this.username + ' enrolled Successfully',
+      };
     } catch (error) {
       console.error(error.message);
       throw new Error(error);
