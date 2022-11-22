@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as path from 'path';
-// import * as fs from 'fs';
+import * as fs from 'fs';
 // import { Gateway, GatewayOptions, Wallets, X509Identity } from 'fabric-network';
 import * as hfc from 'fabric-client';
 // import * as yaml from 'js-yaml';
@@ -20,9 +20,16 @@ export class AppService {
     '../connection-profile/client-org1.yaml',
   );
 
-  pkPath =
-    '/home/ec2-user/msp/keystore/0e9ba706091722dd10bd5a8b70f6e1542e48c1ca4c8642985233a30eb78346a5_sk';
-  signCertPath = '/home/ec2-user/msp/signcerts.cert.pem';
+  privateKey = fs
+    .readFileSync(
+      path.resolve(
+        '/home/ec2-user/msp/keystore/0e9ba706091722dd10bd5a8b70f6e1542e48c1ca4c8642985233a30eb78346a5_sk',
+      ),
+    )
+    .toString();
+  signCert = fs
+    .readFileSync(path.resolve('/home/ec2-user/msp/signcerts.cert.pem'))
+    .toString();
 
   // walletPath = path.join(__dirname, 'wallet');
 
@@ -91,8 +98,8 @@ export class AppService {
     try {
       const client = await this.getClient();
       await client.setAdminSigningIdentity(
-        this.pkPath,
-        this.signCertPath,
+        this.privateKey,
+        this.signCert,
         this.mspId,
       );
       const channel = client.getChannel(this.channelName);
