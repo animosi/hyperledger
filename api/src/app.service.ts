@@ -103,6 +103,7 @@ export class AppService {
         this.mspId,
       );
       const channel = client.getChannel(this.channelName);
+      await channel.initialize({ discover: true });
 
       if (!channel) {
         throw new Error('CHANNEL_NOT_FOUND');
