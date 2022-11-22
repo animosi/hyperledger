@@ -176,4 +176,67 @@ export class AppService {
       ),
     );
   }
+  async queryChaincode(peers, channelName, chaincodeName, args, fcn) {
+    try {
+      // setup the client for this org
+      const client = await this.getClient();
+
+      const channel = client.getChannel(channelName);
+      if (!channel) {
+        throw new Error('CHANNEL_NOT_FOUND');
+      }
+
+      // send query
+      const request = {
+        targets: ['nd-I3OM7G6JIBCSRAAGFQGKJUIGSM'],
+        chaincodeId: 'mycc',
+        fcn: 'query',
+        args: ['query', 'a'],
+      };
+
+      const responses = await channel.queryByChaincode(request);
+      const ret = [];
+      if (responses) {
+        // you may receive multiple responses if you passed in multiple peers. For example,
+        // if the targets : peers in the request above contained 2 peers, you should get 2 responses
+        for (let i = 0; i < responses.length; i++) {
+          console.log(
+            '##### queryChaincode - result of query: ' +
+              responses[i].toString('utf8') +
+              '\n',
+          );
+        }
+        // check for error
+        const response = responses[0].toString('utf8');
+
+        if (
+          responses[0]
+            .toString('utf8')
+            .indexOf('Error: transaction returned with failure') != -1
+        ) {
+          throw new Error('ERROR');
+        }
+        // we will only use the first response. We strip out the Fabric key and just return the payload
+        const json = JSON.parse(responses[0].toString('utf8'));
+        if (Array.isArray(json)) {
+          for (const key in json) {
+            if (json[key]['Record']) {
+              ret.push(json[key]['Record']);
+            } else {
+              ret.push(json[key]);
+            }
+          }
+        } else {
+          ret.push(json);
+        }
+        console.log('RETURN', ret);
+        return ret;
+      } else {
+        return 'RESPONSE_NULL';
+      }
+    } catch (error) {
+      console.log('ERROR');
+      return error.toString();
+    }
+  }
 }
