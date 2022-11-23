@@ -1,24 +1,38 @@
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License").
-# You may not use this file except in compliance with the License.
-# A copy of the License is located at
-# 
-#     http://www.apache.org/licenses/LICENSE-2.0
-# 
-# or in the "license" file accompanying this file. This file is distributed 
-# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
-# express or implied. See the License for the specific language governing 
-# permissions and limitations under the License.
-
-name: "ngo-org1"
-x-type: "hlfv1"
-description: "NGO client definition for Org1"
-version: "1.0"
+---
+name: first-network-org1
+version: 1.0.0
 client:
-  organization: Org1
-  credentialStore:
-    path: "./fabric-client-certs-org1"
-    cryptoStore:
-      path: "./fabric-client-keys-org1"
+  organization: org1
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+organizations:
+  Org1:
+    mspid: m-HLJ5GNXSINB73OM2FTDKHGSZOU
+    peers:
+      - nd-I3OM7G6JIBCSRAAGFQGKJUIGSM
+    certificateAuthorities:
+      - ca-org1
+peers:
+  nd-I3OM7G6JIBCSRAAGFQGKJUIGSM:
+    url: grpcs://nd-i3om7g6jibcsraagfqgkjuigsm.m-hlj5gnxsinb73om2ftdkhgszou.n-x32jr6f5gfc4hofle3jgx6o2hi.managedblockchain.ap-southeast-1.amazonaws.com:30003
+    grpcOptions:
+      ssl-target-name-override: nd-I3OM7G6JIBCSRAAGFQGKJUIGSM
+    tlsCACerts:
+      path: /home/ec2-user/managedblockchain-tls-chain.pem
+   
+certificateAuthorities:
+  ca-org1:
+    url: https://ca.m-hlj5gnxsinb73om2ftdkhgszou.n-x32jr6f5gfc4hofle3jgx6o2hi.managedblockchain.ap-southeast-1.amazonaws.com:30002
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: /home/ec2-user/managedblockchain-tls-chain.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: Midassoft22
+    caName: m-HLJ5GNXSINB73OM2FTDKHGSZOU
 
+    httpOptions:
+      verify: false

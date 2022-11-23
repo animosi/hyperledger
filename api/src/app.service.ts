@@ -123,8 +123,7 @@ export class AppService {
       }
       return res;
     } catch (error) {
-      console.log('ERROR: ', error.message);
-      return error.toString();
+      throw new Error(error.message);
     }
   }
 }
