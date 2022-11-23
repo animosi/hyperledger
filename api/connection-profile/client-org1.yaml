@@ -21,7 +21,7 @@ peers:
       ssl-target-name-override: nd-I3OM7G6JIBCSRAAGFQGKJUIGSM
     tlsCACerts:
       path: /home/ec2-user/managedblockchain-tls-chain.pem
-   
+
 certificateAuthorities:
   ca-org1:
     url: https://ca.m-hlj5gnxsinb73om2ftdkhgszou.n-x32jr6f5gfc4hofle3jgx6o2hi.managedblockchain.ap-southeast-1.amazonaws.com:30002
@@ -33,6 +33,3 @@ certificateAuthorities:
       - enrollId: admin
         enrollSecret: Midassoft22
     caName: m-HLJ5GNXSINB73OM2FTDKHGSZOU
-
-    httpOptions:
-      verify: false
